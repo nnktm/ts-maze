@@ -20,3 +20,26 @@
   height: 30px;
   border: 1px solid #0000001e;
 }
+
+.customMaze {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.customMazeItem {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.textBox {
+  width: 100px;
+  height: 30px;
+  padding: 0 10px;
+  margin: 0 10px;
+  border: 1px solid #0000001e;
+  border-radius: 5px;
+}

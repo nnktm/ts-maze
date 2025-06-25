@@ -29,67 +29,79 @@ export default function Home() {
     height: 11,
   });
 
+  const [inputSetting, setInputSetting] = useState<{
+    width: string;
+    height: string;
+  }>({
+    width: '11',
+    height: '11',
+  });
+
+  const handleWidthBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    let value = Number(e.target.value);
+    if (value < 3 || value > 99) {
+      alert(`幅は3以上99以下にしてください`);
+      value = 5;
+    }
+    const adjustedValue = value % 2 === 0 ? value + 1 : value;
+    setMazeSet((prev) => ({ ...prev, width: adjustedValue }));
+    setInputSetting((prev) => ({ ...prev, width: adjustedValue.toString() }));
+  };
+
+  const handleHeightBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    let value = Number(e.target.value);
+    if (value < 3 || value > 99) {
+      alert(`縦の幅は3以上99以下にしてください`);
+      value = 5;
+    }
+    const adjustedValue = value % 2 === 0 ? value + 1 : value;
+
+    setMazeSet((prev) => ({ ...prev, height: adjustedValue }));
+    setInputSetting((prev) => ({ ...prev, height: adjustedValue.toString() }));
+  };
+
   const maze = initialMazeMap(mazeSet.width, mazeSet.height);
 
   return (
     <div className={styles.container}>
       <div className={styles.customMaze}>
-        <label>
-          <strong>幅</strong>
-        </label>
-        <input
-          type="number"
-          min="1"
-          max="99"
-          value={mazeSet.width}
-          onChange={(e) => {
-            const value = Number(e.target.value);
-            if (value < 3) {
-              alert(`幅は3以上にしてください`);
-              return;
-            }
-            if (value > 99) {
-              alert(`幅は99以下にしてください`);
-              return;
-            }
-            // 奇数に調整（偶数が入力された場合は次の奇数にする）
-            const adjustedValue = value % 2 === 0 ? value + 1 : value;
-            setMazeSet({
-              ...mazeSet,
-              width: adjustedValue,
-            });
-          }}
-          className={styles.textBox}
-        />
-      </div>
-      <div className={styles.customBoardItem}>
-        <label>
-          <strong>高さ</strong>
-        </label>
-        <input
-          type="number"
-          min="1"
-          max="99"
-          value={mazeSet.height}
-          onChange={(e) => {
-            const value = Number(e.target.value);
-            if (value < 3) {
-              alert(`縦の幅は３以上にしてください`);
-              return;
-            }
-            if (value > 99) {
-              alert(`縦の幅は99以下にしてください`);
-              return;
-            }
-            // 奇数に調整（偶数が入力された場合は次の奇数にする）
-            const adjustedValue = value % 2 === 0 ? value + 1 : value;
-            setMazeSet({
-              ...mazeSet,
-              height: adjustedValue,
-            });
-          }}
-          className={styles.textBox}
-        />
+        <div className={styles.customMazeItem}>
+          <label>
+            <strong>幅(奇数にしてください)</strong>
+          </label>
+          <input
+            type="number"
+            min="1"
+            max="99"
+            value={inputSetting.width}
+            onChange={(e) => {
+              setInputSetting((prev) => ({ ...prev, width: e.target.value }));
+            }}
+            onBlur={(e) => handleWidthBlur(e)}
+            className={styles.textBox}
+          />
+        </div>
+        <div className={styles.customMazeItem}>
+          <label>
+            <strong>高さ(奇数にしてください)</strong>
+          </label>
+          <input
+            type="number"
+            min="1"
+            max="99"
+            value={inputSetting.height}
+            onChange={(e) => {
+              setInputSetting((prev) => ({ ...prev, height: e.target.value }));
+            }}
+            onBlur={(e) => handleHeightBlur(e)}
+            className={styles.textBox}
+          />
+          <div className={styles.customMazeItem}>
+            <button>
+              <strong>幅と高さを更新</strong>
+            </button>
+          </div>
+        </div>
       </div>
       <div
         className={styles.maze}
