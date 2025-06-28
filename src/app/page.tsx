@@ -44,8 +44,9 @@ function createMaze(nowMaze: number[][]) {
   return newMaze;
 }
 
-function calcMaze(nowMaze: number[][]) {
+function calcMaze(nowMaze: number[][], playerPosition: { x: number; y: number }) {
   const maze = structuredClone(nowMaze);
+  maze[playerPosition.y][playerPosition.x] = 2;
   return maze;
 }
 
@@ -64,6 +65,9 @@ export default function Home() {
   });
 
   const [nowMaze, setNowMaze] = useState<number[][]>(initialMazeMap(mazeSet.width, mazeSet.height));
+
+  const [playerPosition, setPlayerPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [playerDirection, setPlayerDirection] = useState<number>(DIRECTIONS[0][0]);
 
   const handleWidthBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     let value = Number(e.target.value);
@@ -90,7 +94,7 @@ export default function Home() {
     setNowMaze(initialMazeMap(mazeSet.width, adjustedValue));
   };
 
-  const maze = calcMaze(nowMaze);
+  const maze = calcMaze(nowMaze, playerPosition);
 
   const handleCreateMaze = () => {
     setNowMaze(createMaze(nowMaze));
@@ -158,9 +162,19 @@ export default function Home() {
               <div
                 key={`${x}-${y}`}
                 className={styles.cell}
-                style={{
-                  backgroundColor: col === 0 ? 'white' : 'black',
-                }}
+                style={
+                  col === 2
+                    ? {
+                        backgroundColor: 'red',
+                        borderRadius: '50%',
+                        height: '75%',
+                        width: '75%',
+                        margin: 'auto',
+                      }
+                    : {
+                        backgroundColor: col === 0 ? 'white' : 'black',
+                      }
+                }
               />
             )),
           )}
